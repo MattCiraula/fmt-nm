@@ -1,0 +1,9 @@
+*.jar
+*.class
+/.nrepl-port
+/.prepl-port
+/.cpcache
+*.*~
+#*#
+/.lsp
+/.clj-kondo
