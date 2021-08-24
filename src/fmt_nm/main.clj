@@ -1,8 +1,9 @@
 (ns fmt-nm.main
   (:require [clojure.java.shell :as shell]
-            [clojure.string :as string]))
+            [clojure.string :as string])
+  (:gen-class))
 
-;; TODO: get native comp working
+;; TODO: make this work with relative paths
 
 (defn format-file-name
   "We will start by changing TitleCase to kebab-case"
@@ -10,9 +11,9 @@
   (:res
    (reduce (fn [{:keys [res past] :as acc} letter]
              ;; may want to refactor, could put a cond to check if (last res) == - and drop
-             (cond (java.lang.Character/isUpperCase letter)
+             (cond (java.lang.Character/isUpperCase ^java.lang.Character letter)
                    (if (or (= res "")
-                           (java.lang.Character/isUpperCase (last past))
+                           (java.lang.Character/isUpperCase ^java.lang.Character (last past))
                            (= (last res) \-))
                      (-> acc
                          (update :res str (string/lower-case letter))

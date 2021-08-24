@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ -z "$GRAALVM_HOME" ]; then
+    echo 'Please set GRAALVM_HOME'
+		exit 1
+fi
+
+clojure -M -e "(compile 'fmt-nm.main)"
+
+# Ensure Graal native-image program is installed
+#"$GRAALVM_HOME/bin/gu" install native-image
+
+"$GRAALVM_HOME/bin/native-image" \
+    -cp "$(clojure -Spath):classes" \
+    -H:Name=build/fmt-nm \
+    -H:+ReportExceptionStackTraces \
+    --initialize-at-build-time \
+    --verbose \
+    --no-fallback \
+    --no-server	"-J-Xmx4g" \
+    fmt_nm.main
