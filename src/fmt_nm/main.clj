@@ -3,7 +3,7 @@
             [clojure.string :as string])
   (:gen-class))
 
-;; TODO: make this work with relative paths
+;; TODO: implement some command line args like print commands without running...
 
 (defn format-file-name
   "We will start by changing TitleCase to kebab-case"
@@ -47,11 +47,9 @@
         separated (map separate-file-name files)]
     (if (= err "")
       (dorun (map (fn [[og path file ext]]
-                      (let [formatted (str path (format-file-name file) ext)]
-                        (when-not (= formatted og)
-                          ;; TODO: research mapping with side effects
-                          ;; running a shell command from map might be a bad idea
-                          (shell/sh "mv" og formatted))))
-                    separated))
+                    (let [formatted (str path (format-file-name file) ext)]
+                      (when-not (= formatted og)
+                        (shell/sh "mv" og formatted))))
+                  separated))
       (println "Error: " err)))
   (System/exit 0))
