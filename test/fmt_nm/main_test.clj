@@ -34,15 +34,15 @@
     (testing "title case with spaces"
       (is (= (format-file-name "Title Case")
              "title-case")))
-    (testing "file extensions should be ignored"
-      (is (= (format-file-name "IgnoreThe.Exten sion")
-             "ignore-the.Exten sion")))
     (testing "replace underscores"
       (is (= (format-file-name "replace_underscores")
              "replace-underscores")))
     (testing "drop commas"
       (is (= (format-file-name "Drop, The,Commas,dude")
-             "drop-the-commas-dude")))))
+             "drop-the-commas-dude")))
+    (testing "replace periods"
+      (is (= (format-file-name "no.periods")
+             "no-periods")))))
 
 (deftest seperate-file-name
   (testing "separate-file-name: "
@@ -50,23 +50,31 @@
       (is (let [res (separate-file-name "/path/from/root/foo.bar")]
             (and (= (second res)
                     "/path/from/root/")
+                 (= (nth res 2)
+                    "foo")
                  (= (last res)
-                    "foo.bar")))))
+                    ".bar")))))
     (testing "relative path"
       (is (let [res (separate-file-name "relative/path/bar.baz")]
             (and (= (second res)
                     "relative/path/")
+                 (= (nth res 2)
+                    "bar")
                  (= (last res)
-                    "bar.baz")))))
+                    ".baz")))))
     (testing "relative path with dots"
       (is (let [res (separate-file-name "../dotted/baz.qux")]
             (and (= (second res)
                     "../dotted/")
+                 (= (nth res 2)
+                    "baz")
                  (= (last res)
-                    "baz.qux")))))
+                    ".qux")))))
     (testing "file with no extension"
       (is (let [res (separate-file-name "/somewhere/bar")]
             (and (= (second res)
                     "/somewhere/")
+                 (= (nth res 2)
+                    "bar")
                  (= (last res)
-                    "bar")))))))
+                    "")))))))
