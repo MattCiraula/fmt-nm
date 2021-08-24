@@ -2,11 +2,7 @@
   (:require [clojure.java.shell :as shell]
             [clojure.string :as string]))
 
-;; TODO: find out why /home/matt/books/books/computers/web/Rediscovering.JavaScript.2018.6.pdf
-;;           doesn't get put in lowercase
-;;       make it actually run the commands
-;;       integration test in controlled env
-;;       get native comp working
+;; TODO: get native comp working
 
 (defn format-file-name
   "We will start by changing TitleCase to kebab-case"
@@ -49,11 +45,12 @@
         files (string/split (:out res) #"\n")
         separated (map separate-file-name files)]
     (if (= err "")
-      (println (filter #(not= % nil) (map (fn [[og path file ext]]
+      (dorun (map (fn [[og path file ext]]
                       (let [formatted (str path (format-file-name file) ext)]
                         (when-not (= formatted og)
                           ;; TODO: research mapping with side effects
                           ;; running a shell command from map might be a bad idea
-                          (str "mv " og " " formatted))))
-                    separated)))
-      (println "Error: " err))))
+                          (shell/sh "mv" og formatted))))
+                    separated))
+      (println "Error: " err)))
+  (System/exit 0))
