@@ -6,6 +6,6 @@
 /classes
 *.jar
 *.class
-*build_aritifacts*
+*build_artifacts*
 *.*~
 #*#
